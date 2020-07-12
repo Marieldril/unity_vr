@@ -1,5 +1,3 @@
 testujemy 132
 test
-12 lat nie spałem
-
-dddxxxxdxddxxd
+12 lat nie spałem.
