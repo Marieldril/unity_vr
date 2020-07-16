@@ -1,11 +1,12 @@
 <?php
-//Server
-$servername = "sql7.freemysqlhosting.net";
-$db_username = "sql7353088";
-$db_password = "KRtXDWhBFU";
-$db_name = "sql7353088";
+//Server info
+//https://www.w3schools.com/php/php_mysql_select.asp
+$servername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "unity_vr_sql";
 
-//User
+//User info
 $loginUser = $_POST["loginUser"];
 $loginPass = $_POST["loginPass"];
 
@@ -18,14 +19,22 @@ if ($conn->connect_error) {
 }
 echo "Połączono z bazą. ";
 
-// Login
-$sql = "SELECT Haslo FROM Logowanie WHERE Nazwa = '" . $loginUser . "'";
-$result = $conn->query($sql);
+// Login -- protected
+//https://www.hacksplaining.com/exercises/sql-injection#/start
+//https://www.w3schools.com/sql/sql_injection.asp
+
+$sql = "SELECT Password FROM users WHERE Login = ?"; //https://www.w3schools.com/php/php_mysql_select.asp
+
+$statement = $conn -> prepare($sql);
+$statement -> bind_param("s", $loginUser);
+$statement -> execute();
+
+$result = $statement -> get_result();
 
 if ($result->num_rows > 0) {
 	// output data of each row
 	while($row = $result->fetch_assoc()) {
-		if($row["Haslo"] == $loginPass){
+		if($row["Password"] == $loginPass){
 			echo "Zalogowano pomyślnie! ";
 		} else {
 			echo "Niepoprawny Login lub Hasło. ";
