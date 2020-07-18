@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class WebPHPConnect : MonoBehaviour
 {
     public static string CurrentUser;
+    public static string CurrentID;
 
     // Start is called before the first frame update
     void Start()
@@ -55,14 +56,35 @@ public class WebPHPConnect : MonoBehaviour
             else
             {
                 Debug.Log(www.downloadHandler.text);
-                statusText.text = www.downloadHandler.text;
             }
 
-            if (www.downloadHandler.text == "Połączono z bazą. Zalogowano pomyślnie! ")
+            if (www.downloadHandler.text != "Niepoprawny Login lub Hasło. " && www.downloadHandler.text != "Użytkownik nie istnieje. ")
             {
-                string Login_now = LoginString;
+                CurrentID = www.downloadHandler.text;
                 CurrentUser = LoginString;
                 SceneManager.LoadScene(2);
+            } else
+                statusText.text = "Niepoprawny e-mail lub hasło.";
+        }
+    }
+
+    public static IEnumerator Send(string UserID, string Question, string Points)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("UserID", UserID);
+        form.AddField("Question", Question);
+        form.AddField("Points", Points);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("http://localhost/unity_vr_sql/sendScore.php", form))
+        {
+            yield return www.SendWebRequest();
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
             }
         }
     }
