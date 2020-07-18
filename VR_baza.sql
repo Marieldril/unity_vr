@@ -95,3 +95,184 @@ CREATE or REPLACE FUNCTION fInsertResult(LocalUserID int(10), LocalQuestionID in
 
 	END$$
 DELIMITER ;
+
+DELIMITER //
+CREATE or REPLACE FUNCTION fCheckPointCompatibility(LocalQuestionID int(5), Point int(3))
+	RETURNS BOOL
+	BEGIN
+        if (SELECT QuestionMaxPoint FROM questions WHERE QuestionID = LocalQuestionID)>= Point THEN
+        	return true;	
+        ELSE
+        	return false;
+        END IF;
+	END//
+DELIMITER ;
+
+-----
+
+DELIMITER $$
+CREATE or REPLACE FUNCTION fInsertResult(LocalUserID int(10), LocalQuestionID int(5), LocalPointResult int(3))
+    RETURNS varchar(25)
+	BEGIN
+    
+        DECLARE LocalAttemptNumber int(5);
+        declare exit handler for sqlexception
+
+        -- 
+        -- error value  
+        -- 
+        BEGIN
+            GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+            SET @full_error = CONCAT("MAIN ERROR [", @errno, "] ", @text);
+            return @full_error;
+        END;
+        
+        
+        if not (select fCheckPointCompatibility(LocalQuestionID, LocalPointResult)) THEN
+        	RETURN "blad";
+        else
+            -- 
+            -- check AttemptNumber in INSERT INTO  
+            -- 
+            set LocalAttemptNumber = (SELECT max(AttemptNumber) FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID);
+
+            IF EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, LocalAttemptNumber+1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            ELSEIF not EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, 1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            else
+                return 'Blad zapisu';
+
+            END IF;
+        END IF;
+
+	END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE or REPLACE FUNCTION fCheckPointCompatibility(LocalQuestionID int(5), Point int(3))
+	RETURNS varchar(300)
+	BEGIN
+    
+    	declare exit handler for sqlexception
+        
+        BEGIN
+            GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+            SET @full_error = CONCAT("MAIN ERROR [", @errno, "] ", @text);
+            return @full_error;
+        END;
+        
+        if (SELECT QuestionMaxPoint FROM questions WHERE QuestionID = LocalQuestionID)>= Point THEN
+        	return "1";	
+        ELSE
+        	return "Blad zgodnosci wartosci punktow";
+        END IF;
+        
+	END $$
+DELIMITER ;
+
+DELIMITER //
+CREATE or REPLACE FUNCTION fInsertResult(LocalUserID int(10), LocalQuestionID int(5), LocalPointResult int(3))
+    RETURNS varchar(300)
+	BEGIN
+    
+        DECLARE LocalAttemptNumber int(5);
+        DECLARE CheckPointCompatibility varchar(300);
+        
+        set CheckPointCompatibility = (select fCheckPointCompatibility(LocalQuestionID, LocalPointResult));
+        
+        if not (CheckPointCompatibility = "1") THEN
+        	RETURN CheckPointCompatibility;
+        else
+            -- 
+            -- check AttemptNumber in INSERT INTO  
+            -- 
+            set LocalAttemptNumber = (SELECT max(AttemptNumber) FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID);
+
+            IF EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, LocalAttemptNumber+1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            ELSEIF not EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, 1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            else
+                return 'Blad zapisu';
+
+            END IF;
+        END IF;
+
+	END //
+DELIMITER ;
+
+
+--------
+
+DELIMITER //
+CREATE or REPLACE FUNCTION fCheckPointCompatibility(LocalQuestionID int(5), Point int(3))
+	RETURNS varchar(100)
+	BEGIN
+    	IF not EXISTS (SELECT * FROM questions WHERE QuestionID = LocalQuestionID) then
+        	RETURN CONCAT("MAIN ERROR [ ] Brak pytania QuestionID = ", LocalQuestionID ," w tabeli questions");
+        END IF;
+        
+        if (SELECT QuestionMaxPoint FROM questions WHERE QuestionID = LocalQuestionID)>= Point THEN
+        	return true;	
+        ELSE
+        	return "Blad zgodnosci wartosci punktow";
+        END IF;
+	END//
+DELIMITER ;
+
+DELIMITER $$
+CREATE or REPLACE FUNCTION fInsertResult(LocalUserID int(10), LocalQuestionID int(5), LocalPointResult int(3))
+    RETURNS varchar(300)
+	BEGIN
+    
+        DECLARE LocalAttemptNumber int(5);
+        DECLARE CheckPointCompatibility varchar(300);
+        declare exit handler for sqlexception
+
+        -- 
+        -- error value  
+        -- 
+        BEGIN
+            GET DIAGNOSTICS CONDITION 1 @errno = MYSQL_ERRNO, @text = MESSAGE_TEXT;
+            SET @full_error = CONCAT("MAIN ERROR [", @errno, "] ", @text);
+            return @full_error;
+        END;
+        
+        set CheckPointCompatibility = (select fCheckPointCompatibility(LocalQuestionID, LocalPointResult));
+        
+        if not (CheckPointCompatibility = "1") THEN
+        	RETURN CheckPointCompatibility;
+       	end if;
+        
+            -- 
+            -- check AttemptNumber in INSERT INTO  
+            -- 
+            set LocalAttemptNumber = (SELECT max(AttemptNumber) FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID);
+
+            IF EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, LocalAttemptNumber+1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            ELSEIF not EXISTS (SELECT * FROM users_results WHERE UserID = LocalUserID and QuestionID =LocalQuestionID) then 
+                INSERT INTO users_results(UserID, AttemptNumber, QuestionID, PointResult) VALUES(LocalUserID, 1, LocalQuestionID, LocalPointResult);
+                return 'Zapis udany';
+
+            else
+                return 'Blad zapisu';
+
+            END IF;
+
+
+	END$$
+DELIMITER ;
+
