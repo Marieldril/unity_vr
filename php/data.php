@@ -1,17 +1,9 @@
 <?php
-//Server info
-//https://www.w3schools.com/php/php_mysql_select.asp
-$servername = "localhost";
-$db_username = "root";
-$db_password = "";
-$db_name = "unity_vr_sql";
+require 'Connector.php'; //https://www.w3schools.com/php/php_includes.asp
 
 //User info
 $loginUser = $_POST["loginUser"];
 $loginPass = $_POST["loginPass"];
-
-// Create connection
-$conn = new mysqli($servername, $db_username, $db_password, $db_name);
 
 // Check connection
 if ($conn->connect_error) {
@@ -42,5 +34,4 @@ if ($result->num_rows > 0) {
 	echo "Użytkownik nie istnieje. ";
 }
 $conn->close();
-
 ?>
