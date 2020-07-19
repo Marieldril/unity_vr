@@ -19,6 +19,7 @@ public class WebPHPConnect : MonoBehaviour
         //StartCoroutine(Login());
     }
 
+    // Connect to SQL, check if everything is OK
     public static IEnumerator GetRequest(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
@@ -40,6 +41,7 @@ public class WebPHPConnect : MonoBehaviour
         }
     }
 
+    // Login with data from ServerLogin.cs
     public static IEnumerator Login(string LoginString, string PasswordString, Text statusText)
     {
         WWWForm form = new WWWForm();
@@ -62,12 +64,13 @@ public class WebPHPConnect : MonoBehaviour
             {
                 CurrentID = www.downloadHandler.text;
                 CurrentUser = LoginString;
-                SceneManager.LoadScene(2);
+                SceneManager.LoadScene(1);
             } else
                 statusText.text = "Niepoprawny e-mail lub hasło.";
         }
     }
 
+    // Send User score from SQLSendScore.cs
     public static IEnumerator Send(string UserID, string Question, string Points)
     {
         WWWForm form = new WWWForm();
