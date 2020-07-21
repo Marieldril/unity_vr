@@ -12,6 +12,7 @@ public class ServerLogin : MonoBehaviour
     public Button button_login;
     public Button button_guest;
     public Text status;
+	
     // Start is called before the first frame update
     void Start()
     {
