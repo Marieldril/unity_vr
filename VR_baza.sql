@@ -1,4 +1,4 @@
-Create table users_login(
+Create table users(
     UserID int(10) AUTO_INCREMENT PRIMARY KEY,
     UserName varchar(30) UNIQUE,
     UserEmail varchar(30) NOT Null UNIQUE,
@@ -16,13 +16,13 @@ Create table users_results(
     PointResult int(3));
 	
 ALTER TABLE users_results
-ADD FOREIGN KEY (UserID) REFERENCES users_login(UserID);
+ADD FOREIGN KEY (UserID) REFERENCES Users(UserID);
 
 ALTER TABLE users_results
 ADD FOREIGN KEY (QuestionID) REFERENCES questions(QuestionID);
 
-INSERT into users_login(UserName, UserEmail, UserPassword) VALUES ("Marek", "Marek@gmail.com", "Marek");
-INSERT into users_login(UserName, UserEmail, UserPassword) VALUES ("Pawel", "Pawel@gmail.com", "Pawel123");
+INSERT into Users(UserName, UserEmail, UserPassword) VALUES ("Marek", "Marek@gmail.com", "Marek");
+INSERT into Users(UserName, UserEmail, UserPassword) VALUES ("Pawel", "Pawel@gmail.com", "Pawel123");
 
 INSERT into questions(QuestionID, QuestionGroup, QuestionMaxPoint) VALUES (1, "EE.08", 40);
 INSERT into questions(QuestionID, QuestionGroup, QuestionMaxPoint) VALUES (2, "EE.08", 60);
