@@ -25,7 +25,7 @@ Create table teachers(
     TeacherID int(5) AUTO_INCREMENT PRIMARY KEY,
     TeacherFirstName varchar(20) NOT Null UNIQUE,
     TeacherLastName varchar(30) NOT Null UNIQUE,
-    SchoolID varchar(30),
+    SchoolID int(5),
     MainTeacher BOOLEAN,
     TeacherEmail varchar(30) NOT Null UNIQUE,
     TeacherPassword varchar(30) NOT Null);
@@ -42,10 +42,10 @@ ALTER TABLE users_results
 ADD FOREIGN KEY (QuestionID) REFERENCES questions(QuestionID);
 
 ALTER TABLE teachers
-ADD FOREIGN KEY (TeacherID) REFERENCES schools(SchoolID);
+ADD FOREIGN KEY (SchoolID) REFERENCES schools(SchoolID);
 
 ALTER TABLE users
-ADD FOREIGN KEY (SchoolID) REFERENCES schools(SchoolID)
+ADD FOREIGN KEY (SchoolID) REFERENCES schools(SchoolID);
 
 ALTER TABLE groups
 ADD FOREIGN KEY (TeacherID) REFERENCES teachers(TeacherID);
