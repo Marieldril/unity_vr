@@ -1,0 +1,23 @@
+Skrętka U/UTP
+promień: 2,5 mm = 0,0025 m
+średnica: 5 mm
+y długość =/ 30-50 cm
+
+Pojedzyńczy przewód
+średnica: =/ 0,5 mm
+promień: =/ 0,25 mm = 0,00025 m
+
+RJ-45
+y długość = 2,1 cm = 0,021 m 
+x szerokość = 1,1 cm = 0,011 m
+z grubość = 0,7 cm = 0,007 m i 1,1 cm (wypięcie RJ)
+
+Gumka
+y długość = 2,5 cm
+x szerokość = 1,3 cm
+z grubość = 1 cm i 1,5 cm (osłonka na wypięcie RJ)
+
+Zaciskarka
+y długość = 20 cm
+x szerokość = 4 cm do 8 cm
+z grubość = 0,3 cm do 1,8 cmS
