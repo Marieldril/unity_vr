@@ -2,8 +2,7 @@
 
 public class Url_Opener : MonoBehaviour
 {
-
-    public string Url;
+   public string Url;
 
    public void Open()
     {
